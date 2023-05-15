@@ -1,13 +1,12 @@
-#include "tgaimage.h"
+//#include "TGA.h"
+#include<cstdint>
 
-constexpr int width = 800;
-constexpr int height = 800; 
+constexpr std::uint16_t width = 800;
+constexpr std::uint16_t height = 800; 
 
-int main(int argc, char** argc)
+int main(int argc, char** argv)
 {
-	TGAImage framebuffer(width, height, TGAImage::RGB);
+	//TGA_Image(width, height);
 
-
-	framebuffer.write_tga_file("framebuffer.tga");
 	return 0;	
 }

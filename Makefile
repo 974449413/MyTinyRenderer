@@ -3,14 +3,15 @@ TARGET = perspective
 SRC = $(wildcard *.cpp)
 OBJ = $(patsubst %.cpp, %.o, $(SRC))
 
-CXXFLAGS = -c -Wall
+CXXFLAGS = -c -Wall -I../../Library/
 
 $(TARGET):$(OBJ)
 	$(CXX) -o $@ $^
 
-%.o:%.cpp
+%.o:%.cpp	
 	$(CXX) $(CXXFLAGS) $< -o $@
 
 .PHONY:clean
-	rm *.o
+clean:
+	rm *.o $(TARGET)
 
