@@ -22,9 +22,16 @@ typedef struct _TGAHEAD{
 
 class TGA_Image{
 public:
-	TGA_Image() {}	//默认构造函数
-	TGA_Image(const int& width, const int& height);	//构造函数
+	enum PixelColorType{
+		GRAYSCALE = 1,
+		RGB	  = 3,
+		RGBA	  = 4
+	}
+	TGA_Image():width(0),height(0),data(nullptr),pixel_color_type(GRAYSCALE) {}	//默认构造函数
+	TGA_Image(const int& width, const int& height, PixelColorType type);	//构造函数
 private:
 	std::uint16_t width;
 	std::uint16_t height;
+	std::uint8_t* data;
+	int pixel_color_type;
 };

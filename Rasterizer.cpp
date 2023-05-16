@@ -1,8 +1,8 @@
-#include"Transformation.h"
+#include"Rasterizer.h"
 
-Eigen::Matrix4f ModelTransformation(){ return Eigen::Matrix4f::Identity(); }
+void Rasterizer::SetModelTransformation(){ model_transform = Eigen::Matrix4f::Identity(); }
 
-Eigen::Matrix4f ViewTransformation(Eigen::Vector3f eye_pos, Eigen::Vector3f eye_direction)
+void Rasterizer::SetViewTransformation(Eigen::Vector3f eye_pos, Eigen::Vector3f eye_direction)
 {
 	//创建单位矩阵，使用了Matrix4f中的静态函数
 	Eigen::Matrix4f view = Eigen::Matrix4f::Identity();
@@ -32,10 +32,10 @@ Eigen::Matrix4f ViewTransformation(Eigen::Vector3f eye_pos, Eigen::Vector3f eye_
 		{0, 0, 0, -eye_pos.z()},
 		{0, 0, 0, 1}
 	};
-	return view;
+	view_transform = view;
 }
 
-Eigen::Matrix4f PerspectiveTransformation(float fov, float aspect_ratio, float z_near, float z_far, bool is_perspective){
+void Rasterizer::SetPerspectiveTransformation(float fov, float aspect_ratio, float z_near, float z_far, bool is_perspective){
 	Eigen::Matrix4f projection = Eigen::Matrix4f::Identity();
 	if(is_perspective){
 		//TODO：构建透视矩阵
@@ -62,10 +62,10 @@ Eigen::Matrix4f PerspectiveTransformation(float fov, float aspect_ratio, float z
 		{0, 0, 1, -(z_near + z_far) / 2},
 		{0, 0, 0, 1},
 	};
-	return projection;
+	perspective_transform = projection;
 }
 
-Eigen::Matrix4f ViewportTransformation(float viewport_width, float viewport_height){
+void Rasterizer::SetViewportTransformation(float viewport_width, float viewport_height){
 	Eigen::Matrix4f viewport = Eigen::Matrix4f::Identity();
 	viewport *= Eigen::Matrix4f{
 		{viewport_width / 2, 0, 0, viewport_width / 2},
@@ -73,5 +73,9 @@ Eigen::Matrix4f ViewportTransformation(float viewport_width, float viewport_heig
 		{0, 0, 1, 0},
 		{0, 0, 0, 1}
 	};
-	return viewport;
+	viewport_transform = viewport;
+}
+
+void Rasterizer::SetDepthBuffer(const Triangle& triangle){
+	
 }
