@@ -1,5 +1,10 @@
 #include"Rasterizer.h"
 
+Rasterizer::Rasterizer(int w, int h):width(w),height(h){
+	frame_buffer.resize(w * h);
+	depth_buffer.resize(w * h);
+}
+
 void Rasterizer::SetModelTransformation(){ model_transform = Eigen::Matrix4f::Identity(); }
 
 void Rasterizer::SetViewTransformation(Eigen::Vector3f eye_pos, Eigen::Vector3f eye_direction)

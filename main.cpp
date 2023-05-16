@@ -1,12 +1,11 @@
-//#include "TGA.h"
-#include<cstdint>
+#include<opencv2/opencv.hpp>
+#include"Rasterizer.h"
 
-constexpr std::uint16_t width = 800;
-constexpr std::uint16_t height = 800; 
+constexpr int width = 800;
+constexpr int height = 800; 
 
 int main(int argc, char** argv)
 {
-	//TGA_Image(width, height);
 
 	return 0;	
 }

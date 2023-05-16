@@ -5,6 +5,8 @@
 
 class Rasterizer{
 public:
+    Rasterizer(int w, int h);
+
     void SetModelTransformation();
     void SetViewTransformation(Eigen::Vector3f eye_pos, Eigen::Vector3f eye_direction = Eigen::Vector3f{0, 0, 0});
     void SetPerspectiveTransformation(float fov, float aspect_ratio, float z_near, float z_far, bool is_perspective = true);
@@ -17,6 +19,8 @@ private:
     Eigen::Matrix4f perspective_transform;
     Eigen::Matrix4f viewport_transform;
 
+    int width;
+    int height;
     std::vector<float> depth_buffer;
     std::vector<Eigen::Vector3f> frame_buffer;
 };

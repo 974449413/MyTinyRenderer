@@ -1,10 +1,12 @@
 //调整默认的内存对齐方式，节省内存
 #pragma once
 #include<cstdint>
+#include<fstream>
+#include<iostream>
 
 #pragma pack(push,1)
 typedef struct _TGAHEAD{
-	std::uint8_t length;		//0x00 HEADER的总长度，以字节为单位
+	std::uint8_t length;		//0x00 颜色表的总长度，以字节为单位
 	std::uint8_t colorMapType;	//0x01 是否使用颜色表
 	std::uint8_t imageType;	//0x02 图像的类型
 	
@@ -26,9 +28,10 @@ public:
 		GRAYSCALE = 1,
 		RGB	  = 3,
 		RGBA	  = 4
-	}
+	};
 	TGA_Image():width(0),height(0),data(nullptr),pixel_color_type(GRAYSCALE) {}	//默认构造函数
-	TGA_Image(const int& width, const int& height, PixelColorType type);	//构造函数
+	TGA_Image(const std::uint16_t& width, const std::uint16_t& height, PixelColorType type);	//构造函数
+	bool Write(const std::string filename);
 private:
 	std::uint16_t width;
 	std::uint16_t height;
