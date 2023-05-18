@@ -3,8 +3,8 @@
 #include <eigen3/Eigen/Eigen>
 #include "TGA.h"
 
-constexpr std::uint16_t height = 700;
-constexpr std::uint16_t width = 700;
+constexpr std::uint16_t height = 800;
+constexpr std::uint16_t width = 800;
 
 std::vector<Eigen::Vector3f> vertex;
 std::vector<Eigen::Vector3i> face;
@@ -34,9 +34,14 @@ void read() {
 		else if (line.compare(0, 2, "f ") == 0) {
 			iss >> trash;
 			Eigen::Vector3i f;
+			int trash2;
 			for (int i = 0; i < 3; i++) {
 				iss >> f[i];
+				f[i]--;
 				iss >> trash;
+				iss >> trash2;
+				iss >> trash;
+				iss >> trash2;	
 			}
 			face.push_back(f);
 		}
@@ -54,8 +59,8 @@ int main(int argc, char** argv)
 	TGAImage image(height, width);
 	Rasterizer rasterizer_object(height, width);
 
-	rasterizer_object.DrawLine(Eigen::Vector3i{0,0,3}, Eigen::Vector3i{ 699,699,0 });
-	rasterizer_object.DrawLine(Eigen::Vector3i{500,0,3 }, Eigen::Vector3i{ 500,699,0 });
+	//rasterizer_object.DrawLine(Eigen::Vector3i{0,0,3}, Eigen::Vector3i{ 699,699,0 });
+	//rasterizer_object.DrawLine(Eigen::Vector3i{500,0,3 }, Eigen::Vector3i{ 500,699,0 });
 	/*for (int i = 0; i < face.size(); i++) {
 		Eigen::Vector3f point = face[i];
 		for (int j = 0; j < 3; j++) {
@@ -96,23 +101,37 @@ int main(int argc, char** argv)
 			}
 		}
 	}*/
-	/*for (int i = 0; i  <face.size(); i++) {
-		Eigen::Vector3i face2 = face.at(i);
-		for (int j = 0; j < 3; j++) {
-			if (face2[j] >= 0 && face2[j] < vertex.size() && face2[(j + 1) % 3] >= 0 && face2[(j + 1) % 3] < vertex.size()) {
-				Eigen::Vector3f v0 = vertex.at(face2[j]);
-				Eigen::Vector3f v1 = vertex.at(face2[(j + 1) % 3]);
-				int x0 = (v0.x() + 1.) * width / 2.;
-				int y0 = (v0.y() + 1.) * height / 2.;
-				int x1 = (v1.x() + 1.) * width / 2.;
-				int y1 = (v1.y() + 1.) * height / 2.;
-
-				if (y0 <= height - 1 && y1 <= height - 1 && x0 >= 0 && x1 >= 0 && y0 >= 0 && y1 >= 0 && x0 <= width - 1 && x1 <= width - 1) {
-					rasterizer_object.DrawLine(Eigen::Vector3i{ x0, y0, 0 }, Eigen::Vector3i{ x1, y1, 0 });
-				}
-			}
-		}
-	}*/
+	//for (int i = 0; i  <face.size(); i++) {
+	//	Eigen::Vector3i face2 = face.at(i);
+	//	for (int j = 0; j < 3; j++) {
+	//		Eigen::Vector3f v0 = vertex.at(face2[j]);
+	//		Eigen::Vector3f v1 = vertex.at(face2[(j + 1) % 3]);
+	//		/*int x0 = (v0.x() + 1.) * (width - 1) / 2.;
+	//		int y0 = (v0.y() + 1.) * (height - 1) / 2.;
+	//		int x1 = (v1.x() + 1.) * (width - 1) / 2.;
+	//		int y1 = (v1.y() + 1.) * (height - 1) / 2.;*/
+	//		/*int x0 = (v0.x() + 1.) * (width) / 2.;
+	//		int y0 = (v0.y() + 1.) * (height) / 2.;
+	//		int x1 = (v1.x() + 1.) * (width) / 2.;
+	//		int y1 = (v1.y() + 1.) * (height) / 2.;*/
+	//		rasterizer_object.DrawLine(Eigen::Vector3i{ x0, y0, 0 }, Eigen::Vector3i{ x1, y1, 0 });
+	//	}
+	//}
+	int i = 0;
+	Eigen::Vector3i face2 = face.at(i);
+	for (int j = 0; j < 3; j++) {
+		Eigen::Vector3f v0 = vertex.at(face2[j]);
+		Eigen::Vector3f v1 = vertex.at(face2[(j + 1) % 3]);
+		/*int x0 = (v0.x() + 1.) * (width - 1) / 2.;
+		int y0 = (v0.y() + 1.) * (height - 1) / 2.;
+		int x1 = (v1.x() + 1.) * (width - 1) / 2.;
+		int y1 = (v1.y() + 1.) * (height - 1) / 2.;*/
+		int x0 = (v0.x() + 1.) * (width) / 2.;
+		int y0 = (v0.y() + 1.) * (height) / 2.;
+		int x1 = (v1.x() + 1.) * (width) / 2.;
+		int y1 = (v1.y() + 1.) * (height) / 2.;
+		rasterizer_object.DrawLine(Eigen::Vector3i{ x0, y0, 0 }, Eigen::Vector3i{ x1, y1, 0 });
+	}
 
 	image.SetTGAImage(rasterizer_object);
 	if (!image.WriteTGAImage(argv[1])) {

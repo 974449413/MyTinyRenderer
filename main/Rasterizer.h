@@ -10,7 +10,7 @@ public:
 		frame_buffer.resize(static_cast<size_t>(height) * width, Eigen::Vector3i{0, 0, 0});
 	}
 public:
-	void DrawLine(Eigen::Vector3i begin, Eigen::Vector3i end, Eigen::Vector3i color = Eigen::Vector3i{0, 0, 255});
+	void DrawLine(Eigen::Vector3i begin, Eigen::Vector3i end, Eigen::Vector3i color = Eigen::Vector3i{255, 255, 255});
 	int GetIndex(int x,int y);
 
 	const std::vector<Eigen::Vector3i>& FrameBuffer() const { return frame_buffer; }

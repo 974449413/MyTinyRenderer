@@ -27,7 +27,7 @@ bool TGAImage::WriteTGAImage(char* filename) {
 void TGAImage::SetTGAImage(const Rasterizer& rasterizer) {
 	int count = 0;
 	for (int i = 0; i < height * width; ++i) {
-		data[count++] = static_cast<int>(rasterizer.FrameBuffer()[i].y());
+		data[count++] = static_cast<int>(rasterizer.FrameBuffer()[i].z());
 		data[count++] = rasterizer.FrameBuffer()[i].y();
 		data[count++] = rasterizer.FrameBuffer()[i].x();
 	}
