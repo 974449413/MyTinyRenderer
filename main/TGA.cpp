@@ -2,21 +2,22 @@
 
 TGAImage::TGAImage(std::uint16_t h, std::uint16_t w) : width(w),height(h){
 	memset((void*)&header, 0, sizeof(header));
-	//µÍÎ²¶Ë
+	//ï¿½ï¿½Î²ï¿½ï¿½
 	header.imageType = 2;
 	header.width = width;
 	header.height = height;
 	header.bitsPerPixel = 24;
-	header.imageDescriptor = 0b00100000; // µÚËÄÎ»£º0±íÊ¾´Ó×óµ½ÓÒ£¬1±íÊ¾´ÓÓÒµ½×ó;µÚÎåÎ»£º1±íÊ¾´ÓÉÏµ½ÏÂ£¬0±íÊ¾´ÓÏÂµ½ÉÏ
+	header.imageDescriptor = 0b00100000; // ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½0ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½Ò£ï¿½1ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½;ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½1ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Ïµï¿½ï¿½Â£ï¿½0ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Âµï¿½ï¿½ï¿½
 
 	data = new std::uint8_t[static_cast<size_t>(width) * height * header.bitsPerPixel / 3];
+	//memset(data, 0, static_cast<size_t>(width) * height * header.bitsPerPixel / 3);
 }
 
 bool TGAImage::WriteTGAImage(char* filename) {
 	std::ofstream out;
 	out.open(filename, std::ofstream::binary);
 	if (!out.is_open()) {
-		std::cerr << "´ò¿ªÎÄ¼þÊ§°Ü:" << *filename << std::endl;
+		std::cerr << "ï¿½ï¿½ï¿½Ä¼ï¿½Ê§ï¿½ï¿½:" << *filename << std::endl;
 		return false;
 	}
 	out.write((char*)&header, sizeof(header));
@@ -27,8 +28,14 @@ bool TGAImage::WriteTGAImage(char* filename) {
 void TGAImage::SetTGAImage(const Rasterizer& rasterizer) {
 	int count = 0;
 	for (int i = 0; i < height * width; ++i) {
-		data[count++] = static_cast<int>(rasterizer.FrameBuffer()[i].y());
+		// *(data+count++) = rasterizer.FrameBuffer()[i].z();
+		// *(data+count++) = rasterizer.FrameBuffer()[i].y();
+		// *(data+count++) = rasterizer.FrameBuffer()[i].x();
+		data[count++] = rasterizer.FrameBuffer()[i].z();
 		data[count++] = rasterizer.FrameBuffer()[i].y();
 		data[count++] = rasterizer.FrameBuffer()[i].x();
 	}
+	// for(auto v:data){
+	// 	std::cerr<<v<<std::endl;
+	// }
 }
