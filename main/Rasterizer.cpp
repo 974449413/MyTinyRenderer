@@ -12,7 +12,7 @@ void Rasterizer::DrawLine(Eigen::Vector3i begin, Eigen::Vector3i end, Eigen::Vec
 	}
 	bool is_symmetry = false;
 
-	if((y1 - y0) > (x1 - x0)){
+	if(std::abs(y1 - y0) > std::abs(x1 - x0)){
 		std::swap(x0, y0);
 		std::swap(x1, y1);
 		is_symmetry = true;
@@ -44,9 +44,9 @@ void Rasterizer::DrawLine(Eigen::Vector3i begin, Eigen::Vector3i end, Eigen::Vec
 			}
 		}
 		distance += dy;
-		if(distance >= 0.5){
-			y += 1;
-			distance -= 1.;
+		if(std::abs(distance) >= 0.5){
+			y += dy > 0 ? 1 : -1;
+			distance -= dy > 0 ? 1. : -1.;
 		}
 	}
 }

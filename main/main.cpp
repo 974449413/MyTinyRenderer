@@ -118,39 +118,38 @@ int main(int argc, char** argv)
 	//		rasterizer_object.DrawLine(Eigen::Vector3i{ x0, y0, 0 }, Eigen::Vector3i{ x1, y1, 0 });
 	//	}
 	//}
-	int i = 0;
-	Eigen::Vector3i face2 = face.at(i);
-	for (int j = 0; j < 3; j++) {
-		Eigen::Vector3f v0 = vertex.at(face2[j]);
-		Eigen::Vector3f v1 = vertex.at(face2[(j + 1) % 3]);
-		/*int x0 = (v0.x() + 1.) * (width - 1) / 2.;
-		int y0 = (v0.y() + 1.) * (height - 1) / 2.;
-		int x1 = (v1.x() + 1.) * (width - 1) / 2.;
-		int y1 = (v1.y() + 1.) * (height - 1) / 2.;*/
-		int x0 = (v0.x() + 1.) * (width) / 2.;
-		int y0 = (v0.y() + 1.) * (height) / 2.;
-		int x1 = (v1.x() + 1.) * (width) / 2.;
-		int y1 = (v1.y() + 1.) * (height) / 2.;
-		rasterizer_object.DrawLine(Eigen::Vector3i{ x0, y0, 0 }, Eigen::Vector3i{ x1, y1, 0 });
-	}
-	// for (int i = 0; i  <face.size(); i++) {
-	// 	Eigen::Vector3i face2 = face.at(i);
-	// 	for (int j = 0; j < 3; j++) {
-	// 		if (face2[j] >= 0 && face2[j] < vertex.size() && face2[(j + 1) % 3] >= 0 && face2[(j + 1) % 3] < vertex.size()) {
-	// 			Eigen::Vector3f v0 = vertex.at(face2[j]);
-	// 			Eigen::Vector3f v1 = vertex.at(face2[(j + 1) % 3]);
-	// 			int x0 = (v0.x() + 1.) * width / 2.;
-	// 			int y0 = (v0.y() + 1.) * height / 2.;
-	// 			int x1 = (v1.x() + 1.) * width / 2.;
-	// 			int y1 = (v1.y() + 1.) * height / 2.;
-
-	// 			if (y0 <= height - 1 && y1 <= height - 1 && x0 >= 0 && x1 >= 0 && y0 >= 0 && y1 >= 0 && x0 <= width - 1 && x1 <= width - 1) {
-	// 				rasterizer_object.DrawLine(Eigen::Vector3i{ x0, y0, 0 }, Eigen::Vector3i{ x1, y1, 0 });
-	// 			}
-	// 		}
-	// 	}
+	// int i = 0;
+	// Eigen::Vector3i face2 = face.at(i);
+	// for (int j = 0; j < 3; j++) {
+	// 	Eigen::Vector3f v0 = vertex.at(face2[j]);
+	// 	Eigen::Vector3f v1 = vertex.at(face2[(j + 1) % 3]);
+	// 	/*int x0 = (v0.x() + 1.) * (width - 1) / 2.;
+	// 	int y0 = (v0.y() + 1.) * (height - 1) / 2.;
+	// 	int x1 = (v1.x() + 1.) * (width - 1) / 2.;
+	// 	int y1 = (v1.y() + 1.) * (height - 1) / 2.;*/
+	// 	int x0 = (v0.x() + 1.) * (width) / 2.;
+	// 	int y0 = (v0.y() + 1.) * (height) / 2.;
+	// 	int x1 = (v1.x() + 1.) * (width) / 2.;
+	// 	int y1 = (v1.y() + 1.) * (height) / 2.;
+	// 	rasterizer_object.DrawLine(Eigen::Vector3i{ x0, y0, 0 }, Eigen::Vector3i{ x1, y1, 0 });
 	// }
-
+	for (int i = 0; i  <face.size(); i++) {
+		Eigen::Vector3i face2 = face.at(i);
+		for (int j = 0; j < 3; j++) {
+			if (face2[j] >= 0 && face2[j] < vertex.size() && face2[(j + 1) % 3] >= 0 && face2[(j + 1) % 3] < vertex.size()) {
+				Eigen::Vector3f v0 = vertex.at(face2[j]);
+				Eigen::Vector3f v1 = vertex.at(face2[(j + 1) % 3]);
+				int x0 = (v0.x() + 1.) * width / 2.;
+				int y0 = (v0.y() + 1.) * height / 2.;
+				int x1 = (v1.x() + 1.) * width / 2.;
+				int y1 = (v1.y() + 1.) * height / 2.;
+				rasterizer_object.DrawLine(Eigen::Vector3i{ x0, y0, 0 }, Eigen::Vector3i{ x1, y1, 0 });
+			}
+		}
+	}
+	// rasterizer_object.DrawLine(Eigen::Vector3i{ 10, 20, 0 }, Eigen::Vector3i{ 100, 500, 0 }, Eigen::Vector3i{255, 0, 0});
+	// rasterizer_object.DrawLine(Eigen::Vector3i{ 100, 500, 0 }, Eigen::Vector3i{ 30, 650, 0 }, Eigen::Vector3i{255, 255, 0});
+	// rasterizer_object.DrawLine(Eigen::Vector3i{ 30, 650, 0 }, Eigen::Vector3i{ 10, 20, 0 }, Eigen::Vector3i{255, 255, 255});
 	image.SetTGAImage(rasterizer_object);
 	if (!image.WriteTGAImage(argv[1])) {
 		std::cerr << "输入文件:" << argv[1] << "失败" << std::endl;

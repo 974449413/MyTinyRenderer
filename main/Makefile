@@ -1,5 +1,5 @@
 CXX = g++
-TARGET = a
+TARGET = a.out
 SRC = $(wildcard *.cpp)
 OBJ = $(patsubst %.cpp, %.o, $(SRC))
 
