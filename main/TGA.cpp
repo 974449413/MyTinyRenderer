@@ -13,7 +13,7 @@ TGAImage::TGAImage(std::uint16_t h, std::uint16_t w) : width(w),height(h){
 	//memset(data, 0, static_cast<size_t>(width) * height * header.bitsPerPixel / 3);
 }
 
-bool TGAImage::WriteTGAImage(char* filename) {
+bool TGAImage::WriteTGAImage(const char* filename) {
 	std::ofstream out;
 	out.open(filename, std::ofstream::binary);
 	if (!out.is_open()) {

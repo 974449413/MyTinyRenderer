@@ -26,7 +26,7 @@ class TGAImage {
 public:
 	TGAImage(std::uint16_t h, std::uint16_t w);
 	~TGAImage() { delete[] data; }
-	bool WriteTGAImage(char* filename);
+	bool WriteTGAImage(const char* filename);
 	void SetTGAImage(const Rasterizer& rasterizer);
 private:
 	TGA_Header header;
