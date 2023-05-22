@@ -22,6 +22,7 @@ bool TGAImage::WriteTGAImage(const char* filename) {
 	}
 	out.write((char*)&header, sizeof(header));
 	out.write((char*)data, static_cast<size_t>(3) * width * height);
+	out.close();
 	return true;
 }
 
@@ -32,7 +33,38 @@ void TGAImage::SetTGAImage(const Rasterizer& rasterizer) {
 		data[count++] = rasterizer.FrameBuffer()[i].y();
 		data[count++] = rasterizer.FrameBuffer()[i].x();
 	}
-	// for(auto v:data){
-	// 	std::cerr<<v<<std::endl;
-	// }
+}
+
+bool TGAImage::ReadTGAImage(const char* filename, std::vector<Eigen::Vector3f> texture_data){
+	std::ifstream in;
+	in.open(filename, std::ifstream::binary);
+	if (!in.is_open()) {
+		std::cerr << "���ļ�ʧ��:" << *filename << std::endl;
+		return false;
+	}
+	TGA_Header header;
+	in.read((char*)&header, sizeof(header));
+	if(!in.good()){
+		in.close();
+		std::cerr<<"error in read TGA header"<<std::endl;
+		return false;
+	}
+	unsigned long length = static_cast<size_t>(header.width) * header.height * header.bitsPerPixel / 3;
+	std::uint8_t* data = new std::uint8_t[length];
+	in.read((char*)data, length);
+	if(!in.good()){
+		in.close();
+		std::cerr<<"error in read TGA header"<<std::endl;
+		return false;
+	}
+	int count = 0;
+	for (int i = 0; i < header.height * header.width; ++i) {
+		Eigen::Vector3f temporary;
+		temporary.z() = data[count++];
+		temporary.y() = data[count++];
+		temporary.x() = data[count++];
+		texture_data.push_back(temporary);
+	}
+	in.close();
+	return true;
 }

@@ -36,4 +36,11 @@ Model::Model(const char* file){
 			face.push_back(f);
 		}
 	}
+	GetTextureData(file);
+}
+
+void Model::GetTextureData(const char* file){
+	std::string texture_filename(file);
+	texture_filename = texture_filename.substr(0, texture_filename.size() - 4) + "_diffuse.tga";
+	TGAImage::ReadTGAImage(texture_filename.c_str(), color);
 }

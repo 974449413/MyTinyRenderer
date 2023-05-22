@@ -5,6 +5,8 @@
 #include <iostream>
 #include "Model.h"
 
+class Model;
+
 class Rasterizer{
 public:
 	Rasterizer(std::uint16_t height, std::uint16_t width) : width(width),height(height) { 

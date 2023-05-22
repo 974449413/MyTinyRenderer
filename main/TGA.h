@@ -5,28 +5,31 @@
 
 #pragma pack(push,1)
 typedef struct _TGAHEAD {
-	std::uint8_t length;		//0x00 ÑÕÉ«±íµÄ×Ü³¤¶È£¬ÒÔ×Ö½ÚÎªµ¥Î»
-	std::uint8_t colorMapType;	//0x01 ÊÇ·ñÊ¹ÓÃÑÕÉ«±í
-	std::uint8_t imageType;	//0x02 Í¼ÏñµÄÀàÐÍ
+	std::uint8_t length;		//0x00 ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½Ü³ï¿½ï¿½È£ï¿½ï¿½ï¿½ï¿½Ö½ï¿½Îªï¿½ï¿½Î»
+	std::uint8_t colorMapType;	//0x01 ï¿½Ç·ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½
+	std::uint8_t imageType;	//0x02 Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-	std::uint16_t colorMapStart;	//0x03 µÚÒ»¸öÑÕÉ«±íË÷Òý 
-	std::uint16_t colorMapLength;//0x05 ÑÕÉ«±í³¤¶È
-	std::uint8_t colorMapDepth;	//0x07 ÑÕÉ«±íÎ»Êý
+	std::uint16_t colorMapStart;	//0x03 ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
+	std::uint16_t colorMapLength;//0x05 ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	std::uint8_t colorMapDepth;	//0x07 ï¿½ï¿½É«ï¿½ï¿½Î»ï¿½ï¿½
 
-	std::uint16_t xOriginPos;	//0x08 Í¼ÏñxÔ­µã
-	std::uint16_t yOriginPos;	//0x0A Í¼ÏñyÔ­µã
-	std::uint16_t width;		//0x0C Í¼Ïñ¿í¶È
-	std::uint16_t height;	//0x0E Í¼Ïñ¸ß¶È
-	std::uint8_t bitsPerPixel;	//0x10 Í¼ÏñÖÐÃ¿¸öÏñËØËùÕ¼µÄÎ»Êý
-	std::uint8_t imageDescriptor;	//0x11 Í¼ÏñÃèÊö×Ö½Ú
+	std::uint16_t xOriginPos;	//0x08 Í¼ï¿½ï¿½xÔ­ï¿½ï¿½
+	std::uint16_t yOriginPos;	//0x0A Í¼ï¿½ï¿½yÔ­ï¿½ï¿½
+	std::uint16_t width;		//0x0C Í¼ï¿½ï¿½ï¿½ï¿½ï¿½
+	std::uint16_t height;	//0x0E Í¼ï¿½ï¿½ß¶ï¿½
+	std::uint8_t bitsPerPixel;	//0x10 Í¼ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½Î»ï¿½ï¿½
+	std::uint8_t imageDescriptor;	//0x11 Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö½ï¿½
 }TGA_Header;
 #pragma pack(pop)
+
+class Rasterizer;
 
 class TGAImage {
 public:
 	TGAImage(std::uint16_t h, std::uint16_t w);
 	~TGAImage() { delete[] data; }
 	bool WriteTGAImage(const char* filename);
+	static bool ReadTGAImage(const char* filename, std::vector<Eigen::Vector3f> texture_data);
 	void SetTGAImage(const Rasterizer& rasterizer);
 private:
 	TGA_Header header;

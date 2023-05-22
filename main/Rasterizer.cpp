@@ -61,19 +61,23 @@ int Rasterizer::GetIndex(int x,int y){
 }
 
 void Rasterizer::Draw(const Model& model, Primitive type){
-	for (int i = 0; i  <model.face.size(); i++) {
-		Eigen::Vector3i face2 = model.face.at(i);
-		for (int j = 0; j < 3; j++) {
-			if (face2[j] >= 0 && face2[j] < model.vertex.size() && face2[(j + 1) % 3] >= 0 && face2[(j + 1) % 3] < model.vertex.size()) {
+	if(type == Primitive::Line){
+		for (int i = 0; i  <model.face.size(); i++) {
+			Eigen::Vector3i face2 = model.face.at(i);
+			for (int j = 0; j < 3; j++) {
+				Eigen::Vector3i begin,end;
 				Eigen::Vector3f v0 = model.vertex.at(face2[j]);
 				Eigen::Vector3f v1 = model.vertex.at(face2[(j + 1) % 3]);
-				int x0 = (v0.x() + 1.) * width / 2.;
-				int y0 = (v0.y() + 1.) * height / 2.;
-				int x1 = (v1.x() + 1.) * width / 2.;
-				int y1 = (v1.y() + 1.) * height / 2.;
-				DrawLine(Eigen::Vector3i{ x0, y0, 0 }, Eigen::Vector3i{ x1, y1, 0 });
+				begin.x() = (v0.x() + 1.) * width / 2.;
+				begin.y() = (v0.y() + 1.) * height / 2.;
+				end.x() = (v1.x() + 1.) * width / 2.;
+				end.y() = (v1.y() + 1.) * height / 2.;
+				DrawLine(begin, end);
 			}
 		}
+	}
+	else if(type == Primitive::Triangle){
+		
 	}
 }
 

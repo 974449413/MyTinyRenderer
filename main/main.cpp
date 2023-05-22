@@ -3,6 +3,7 @@
 #include <eigen3/Eigen/Eigen>
 #include "TGA.h"
 #include "Model.h"
+#include "Rasterizer.h"
 
 constexpr std::uint16_t height = 800;
 constexpr std::uint16_t width = 800;
@@ -13,7 +14,7 @@ const std::string output = "main.tga";
 
 int main(int argc, char** argv)
 {
-	std::string file = file1;
+	std::string file = file2;
 	if (argc > 1) {
 		file = argv[1];
 	}
