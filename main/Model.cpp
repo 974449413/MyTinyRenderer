@@ -37,4 +37,3 @@ Model::Model(const char* file){
 		}
 	}
 }
-

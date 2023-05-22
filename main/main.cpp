@@ -19,8 +19,8 @@ int main(int argc, char** argv)
 	}
 	Model model(file.c_str());
 	TGAImage image(height, width);
-	Rasterizer rasterizer_object(height, width, model);
-	rasterizer_object.Draw();
+	Rasterizer rasterizer_object(height, width);
+	rasterizer_object.Draw(model, Rasterizer::Primitive::Line);
 	image.SetTGAImage(rasterizer_object);
 	if (!image.WriteTGAImage(output.c_str())) {
 		std::cerr << "输入文件:" << argv[1] << "失败" << std::endl;

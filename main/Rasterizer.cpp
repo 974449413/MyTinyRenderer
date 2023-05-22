@@ -60,7 +60,7 @@ int Rasterizer::GetIndex(int x,int y){
 	return index;
 }
 
-void Rasterizer::Draw(){
+void Rasterizer::Draw(const Model& model, Primitive type){
 	for (int i = 0; i  <model.face.size(); i++) {
 		Eigen::Vector3i face2 = model.face.at(i);
 		for (int j = 0; j < 3; j++) {
