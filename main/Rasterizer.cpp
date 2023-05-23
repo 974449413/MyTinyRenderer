@@ -1,4 +1,5 @@
 #include "Rasterizer.h"
+#include "Model.h"
 
 void Rasterizer::DrawLine(Eigen::Vector3i begin, Eigen::Vector3i end, Eigen::Vector3i color){
 	int x0 = begin.x();

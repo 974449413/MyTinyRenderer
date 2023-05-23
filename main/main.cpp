@@ -14,7 +14,7 @@ const std::string output = "main.tga";
 
 int main(int argc, char** argv)
 {
-	std::string file = file2;
+	std::string file = file1;
 	if (argc > 1) {
 		file = argv[1];
 	}

@@ -3,6 +3,8 @@
 #include <iostream>
 #include "Rasterizer.h"
 
+class Rasterizer;
+
 #pragma pack(push,1)
 typedef struct _TGAHEAD {
 	std::uint8_t length;		//0x00 ��ɫ�����ܳ��ȣ����ֽ�Ϊ��λ
@@ -21,8 +23,6 @@ typedef struct _TGAHEAD {
 	std::uint8_t imageDescriptor;	//0x11 ͼ�������ֽ�
 }TGA_Header;
 #pragma pack(pop)
-
-class Rasterizer;
 
 class TGAImage {
 public:
