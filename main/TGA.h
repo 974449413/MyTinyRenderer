@@ -29,7 +29,6 @@ public:
 	TGAImage(std::uint16_t h, std::uint16_t w);
 	~TGAImage() { delete[] data; }
 	bool WriteTGAImage(const char* filename);
-	static bool ReadTGAImage(const char* filename, std::vector<Eigen::Vector3f> texture_data);
 	void SetTGAImage(const Rasterizer& rasterizer);
 private:
 	TGA_Header header;

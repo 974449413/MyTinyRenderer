@@ -8,8 +8,6 @@
 class Model {
 public:
 	Model(const char* file);
-	void GetTextureData(const char* file);
 	std::vector<Eigen::Vector3f> vertex;
 	std::vector<Eigen::Vector3i> face;
-	std::vector<Eigen::Vector3f> color;
 };

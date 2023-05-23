@@ -21,6 +21,7 @@ public:
 	int GetIndex(int x,int y);
 
 	const std::vector<Eigen::Vector3i>& FrameBuffer() const { return frame_buffer; }
+	void SetFrameBuffer(std::vector<Eigen::Vector3i> vec) { frame_buffer = vec; }
 private:
 	std::uint16_t width;
 	std::uint16_t height;
