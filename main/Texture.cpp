@@ -97,8 +97,8 @@ Texture::Texture(const char* file_name){
 
 Eigen::Vector3i Texture::GetColor(float x, float y) const {
     int new_x = (x - std::floor(x)) * (width - 1);
-    /*int new_y = height - 1 - (y - std::floor(y)) * (height - 1);*/
-	int new_y = (y - std::floor(y)) * (height - 1);
+    int new_y = height - 1 - (y - std::floor(y)) * (height - 1);
+	/*int new_y = (y - std::floor(y)) * (height - 1);*/
 	int index = 0;
 	index += new_y * width;
 	index += new_x;

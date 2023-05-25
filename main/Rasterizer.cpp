@@ -81,21 +81,25 @@ void Rasterizer::Draw(const Model& model, const Texture& texture, Primitive type
 		int index = 0;
 		while(index < model.face.size()){
 			std::cerr << index  << " ";
-			Eigen::Vector3i point[3];
-			Eigen::Vector3i color[3];
+			Eigen::Vector3f point[3];
+			Eigen::Vector3f uv[3];
 			Eigen::Vector3f normal[3];
+			Eigen::Vector3f test_normal;
+			Eigen::Vector3f test_point[3];
 			for (int i = 0; i < 3; i++) {
 				Eigen::Vector3f temporary = model.vertex.at(model.face.at(index)[i]);
+				test_point[i] = temporary;
 				point[i].x() = static_cast<int>((temporary.x() + 1.) * width / 2.);
-				point[i].y() = static_cast<int>((temporary.y() + 1.) * width / 2.);
-				point[i].z() = static_cast<int>(temporary.z());
+				point[i].y() = static_cast<int>((temporary.y() + 1.) * height / 2.);
+				point[i].z() = temporary.z();
 
-				Eigen::Vector3f uv = model.texture.at(model.face_texture.at(index)[i]);
-				color[i] = texture.GetColor(uv.x(), uv.y());
+				uv[i] = model.texture.at(model.face_texture.at(index)[i]);
 
 				normal[i] = model.normal.at(model.face_normal.at(index)[i]);
 			}
-			DrawTriangle(point, color, normal);
+			test_normal = (*(test_point + 1) - *test_point).cross(*(test_point + 2) - *test_point);
+			test_normal = test_normal.normalized();
+			DrawTriangle(point, uv, normal, test_normal, texture);
 			++index;
 		}
 	}
@@ -108,7 +112,7 @@ float CalculateArea(Eigen::Vector3f* point) {
 	return r.norm() / 2;
 }
 
-bool IsInTriangle(Eigen::Vector3i* point, float x, float y, float& u, float& v, float& t) {
+bool IsInTriangle(Eigen::Vector3f* point, float x, float y, float& u, float& v, float& t) {
 	Eigen::Vector3f v1 = { static_cast<float>((point + 1)->x() - point->x()), static_cast<float>((point + 1)->y() - point->y()), 0 };
 	Eigen::Vector3f v2 = { static_cast<float>((point + 2)->x() - (point + 1)->x()), static_cast<float>((point + 2)->y() - (point + 1)->y()), 0 };
 	Eigen::Vector3f v3 = { static_cast<float>(point->x() - (point + 2)->x()), static_cast<float>(point->y() - (point + 2)->y()), 0 };
@@ -149,19 +153,26 @@ bool IsInTriangle(Eigen::Vector3i* point, float x, float y, float& u, float& v, 
 	};
 	t = CalculateArea(t_point) / area;
 
-	if ((z1 > 0 && z2 > 0 && z3 > 0) || (z1 < 0 && z2 < 0 && z3 < 0)) {
+	if ((z1 >= 0 && z2 >= 0 && z3 >= 0) || (z1 <= 0 && z2 <= 0 && z3 <= 0)) {
 		return true;
 	}
 
 	return false;
 }
 
-void Rasterizer::DrawTriangle(Eigen::Vector3i* point, Eigen::Vector3i* color, Eigen::Vector3f* normal){
+void Rasterizer::DrawTriangle(Eigen::Vector3f* point, Eigen::Vector3f* uv, Eigen::Vector3f* normal, Eigen::Vector3f test_normal, const Texture& texture){
 	//包围盒
 	int left = std::min(point->x(), std::min((point+1)->x(), (point+2)->x()));	
 	int right = std::max(point->x(), std::max((point+1)->x(), (point+2)->x()));	
 	int down = std::min(point->y(), std::min((point+1)->y(), (point+2)->y()));
 	int up = std::max(point->y(), std::max((point+1)->y(), (point+2)->y()));
+
+	/*Eigen::Vector3i new_normal2 = (*(point + 2) - *point).cross(*(point + 1) - *point);
+	new_normal2 = new_normal2.normalized();*/
+	Eigen::Vector3f direct = { 0, 0, 1 };
+	float i = direct.dot(test_normal);
+
+	Eigen::Vector3i replace_color{ static_cast<int>(i * 255), static_cast<int>(i * 255), static_cast<int>(i * 255) };
 
 	//逐像素判断
 	for (int x = left; x <= right; ++x) {
@@ -173,16 +184,25 @@ void Rasterizer::DrawTriangle(Eigen::Vector3i* point, Eigen::Vector3i* color, Ei
 					normal->y() * u + (normal + 1)->y() * v + (normal + 2)->y() * t,
 					normal->z() * u + (normal + 1)->z() * v + (normal + 2)->z() * t,
 				};
-				Eigen::Vector3f direct = { 0, 0, 1 };
 				new_normal = new_normal.normalized();
-				if (direct.dot(new_normal) > 0) {
-					float intensity = direct.dot(new_normal);
-					Eigen::Vector3i new_color = {
-					static_cast<int>((color->x() * u + (color + 1)->x() * v + (color + 2)->x() * t) * intensity),
-					static_cast<int>((color->y() * u + (color + 1)->y() * v + (color + 2)->y() * t) * intensity),
-					static_cast<int>((color->z() * u + (color + 1)->z() * v + (color + 2)->z() * t) * intensity),
-					};
-					frame_buffer[GetIndex(x, y)] = new_color;
+				
+
+				float z = point->z() * u + (point + 1)->z() * v + (point + 2)->z() * t;
+				if (z >= z_buffer[GetIndex(x, y)]) {
+					z_buffer[GetIndex(x, y)] = z;
+					if (direct.dot(test_normal) >= 0) {
+						float intensity = direct.dot(test_normal);
+						Eigen::Vector2f new_uv = {
+							uv->x() * u + (uv + 1)->x() * v + (uv + 2)->x() * t,
+							uv->y() * u + (uv + 1)->y() * v + (uv + 2)->y() * t,
+						};
+						Eigen::Vector3i neww_color = texture.GetColor(new_uv.x(), new_uv.y());
+						frame_buffer[GetIndex(x, y)] = {
+							static_cast<int>(neww_color.x() * i),
+							static_cast<int>(neww_color.y()* i),
+							static_cast<int>(neww_color.z()* i),
+						};
+					}
 				}
 			}
 		}
