@@ -24,8 +24,9 @@ public:
 	int GetIndex(int x,int y);
 
 	const std::vector<Eigen::Vector3i>& FrameBuffer() const { return frame_buffer; }
+	const std::vector<float>& ZBuffer() const { return z_buffer; }
 	void SetFrameBuffer(std::vector<Eigen::Vector3i> vec) { frame_buffer = vec; }
-	void DrawTriangle(Eigen::Vector3f* point, Eigen::Vector3f* uv, Eigen::Vector3f* normal, Eigen::Vector3f test_normal, const Texture& texture);
+	void DrawTriangle(Eigen::Vector3f* point, Eigen::Vector3f* uv, Eigen::Vector3f* normal, const Texture& texture);
 	void DrawLine(Eigen::Vector3i begin, Eigen::Vector3i end, Eigen::Vector3i color = Eigen::Vector3i{ 255, 255, 255 });
 private:
 	

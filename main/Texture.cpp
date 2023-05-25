@@ -5,13 +5,16 @@ void Texture::UncompressRLE(std::ifstream& in, std::uint8_t* data, const unsigne
 	std::uint8_t rgb[3];
     std::uint8_t flag;
     do{
+		/*std::cout << "loading texture data: ";
+		std::cout << "[" << current_pixel_pos + 1 << "/" << length << "]";
+		std::cout << "\r";
+		std::cout.flush();*/
 		flag = in.get();
         if (!in.good()) {
             std::cerr<<current_pixel_pos<<std::endl;
 			std::cerr << "an error occured while reading the data\n";
 			return;
 		}
-
         if(flag < 128){
             //首位为0，不重复存放flag+1个rgb颜色
 			++flag;

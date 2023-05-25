@@ -28,11 +28,13 @@ class TGAImage {
 public:
 	TGAImage(std::uint16_t h, std::uint16_t w);
 	~TGAImage() { delete[] data; }
-	bool WriteTGAImage(const char* filename);
+	bool WriteTGAImage(const char* filename, bool is_z_buffer = false);
 	void SetTGAImage(const Rasterizer& rasterizer);
+	void SetZBufferTGAImage(std::vector<float> color);
 private:
 	TGA_Header header;
 	std::uint16_t width;
 	std::uint16_t height;
 	std::uint8_t* data;
+	std::uint8_t* z_buffer_data;
 };
