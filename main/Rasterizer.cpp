@@ -143,8 +143,13 @@ void Rasterizer::Draw(const Model& model, const Texture& texture, Primitive type
 			Eigen::Vector3f point[3];
 			Eigen::Vector3f uv[3];
 			Eigen::Vector3f normal[3];
+			
 			for (int i = 0; i < 3; i++) {
 				Eigen::Vector3f temporary = model.vertex.at(model.face.at(index)[i]);
+
+				temporary = TransformToNormal(model_transform * view_transform * perspective_transform * TransformToHomogeneout(temporary));
+
+
 				point[i].x() = static_cast<int>((temporary.x() + 1.) * width / 2.);
 				point[i].y() = static_cast<int>((temporary.y() + 1.) * height / 2.);
 				point[i].z() = temporary.z();
@@ -200,4 +205,78 @@ void Rasterizer::DrawTriangle(Eigen::Vector3f* point, Eigen::Vector3f* uv, Eigen
 			}
 		}
 	}
+}
+
+void Rasterizer::SetModelTransformation() { 
+	model_transform = Eigen::Matrix4f::Identity(); 
+}
+
+void Rasterizer::SetViewTransformation(Eigen::Vector3f eye_pos, Eigen::Vector3f eye_direction)
+{
+	//创建单位矩阵，使用了Matrix4f中的静态函数
+	Eigen::Matrix4f view = Eigen::Matrix4f::Identity();
+	//TODO:旋转
+	if (eye_direction.normalized() != Eigen::Vector3f{ 0, 0, -1 })
+	{
+		float cos_angle = (eye_direction.dot(Eigen::Vector3f{ 0, 0, -1 })) / eye_direction.norm();
+		Eigen::Vector3f rotation_reel = (eye_direction.cross(Eigen::Vector3f{ 0, 0, -1 })).normalized();
+		//Rodrigued公式构建旋转矩阵
+		Eigen::Matrix3f temporary = Eigen::Matrix3f::Identity();
+		temporary *= cos_angle * temporary + (1 - cos_angle) * rotation_reel * rotation_reel.transpose() + std::sqrt(1 - cos_angle * cos_angle) * Eigen::Matrix3f{
+			{0, -rotation_reel.z(), rotation_reel.y()},
+			{rotation_reel.z(), 0, -rotation_reel.x()},
+			{-rotation_reel.y(), rotation_reel.x(), 0}
+		};
+		view *= Eigen::Matrix4f{
+			{temporary(0, 0), temporary(0, 1), temporary(0, 2), 0},
+			{temporary(1, 0), temporary(1, 1), temporary(1, 2), 0},
+			{temporary(2, 0), temporary(2, 1), temporary(2, 2), 0},
+			{0, 0, 0, 1}
+		};
+	}
+	//TODO:平移
+	view *= Eigen::Matrix4f{
+		{0, 0, 0, -eye_pos.x()},
+		{0, 0, 0, -eye_pos.y()},
+		{0, 0, 0, -eye_pos.z()},
+		{0, 0, 0, 1}
+	};
+	view_transform = view;
+}
+
+void Rasterizer::SetPerspectiveTransformation(float fov, float aspect_ratio, float z_near, float z_far, bool is_perspective) {
+	Eigen::Matrix4f projection = Eigen::Matrix4f::Identity();
+	if (is_perspective) {
+		//TODO：构建透视矩阵
+		projection *= Eigen::Matrix4f{
+			{z_near, 0, 0, 0},
+			{0, z_near, 0, 0},
+			{0, 0, z_near + z_far, -z_near * z_far},
+			{0, 0, 1, 0}
+		};
+	}
+	//TODO:构建正交矩阵
+	float height = std::tan(fov / 2) * z_near * 2;
+	float width = height * aspect_ratio;
+	float depth = z_far - z_near;
+	projection *= Eigen::Matrix4f{
+		{2 / width, 0, 0, 0},
+		{0, 2 / height, 0, 0},
+		{0, 0, 2 / depth, 0},
+		{0, 0, 0, 1}
+	};
+	projection *= Eigen::Matrix4f{
+		{1, 0, 0, 0},
+		{0, 1, 0, 0},
+		{0, 0, 1, -(z_near + z_far) / 2},
+		{0, 0, 0, 1},
+	};
+	perspective_transform = projection;
+}
+
+Eigen::Vector4f Rasterizer::TransformToHomogeneout(Eigen::Vector3f point) {
+	return Eigen::Vector4f{ point.x(), point.y(), point.z(), 1. };
+}
+Eigen::Vector3f Rasterizer::TransformToNormal(Eigen::Vector4f point) {
+	return Eigen::Vector3f{ point.x() / point.w(), point.y() / point.w(), point.z() / point.w() };
 }

@@ -27,7 +27,7 @@ typedef struct _TGAHEAD {
 class TGAImage {
 public:
 	TGAImage(std::uint16_t h, std::uint16_t w);
-	~TGAImage() { delete[] data; }
+	~TGAImage() { delete[] data; delete[] z_buffer_data; }
 	bool WriteTGAImage(const char* filename, bool is_z_buffer = false);
 	void SetTGAImage(const Rasterizer& rasterizer);
 	void SetZBufferTGAImage(std::vector<float> color);

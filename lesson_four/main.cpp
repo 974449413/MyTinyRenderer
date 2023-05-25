@@ -1,7 +1,6 @@
 #include "perspective.h"
 #include "model.h"
 #include "tgaimage.h"
-#include "z_buffer.h"
 
 Vec3f light_dir(0, 0, -1);
 Vec3f camera(0, 0, 3);
@@ -48,7 +47,7 @@ int main(int argc, char** argv) {
         model = new Model(argv[1]);
     }
     else {
-        model = new Model("obj/african_head/african_head.obj");
+        model = new Model("F:/github/MyTinyRenderer/main/african_head/african_head.obj");
     }
 
     zbuffer = new int[width * height];
